@@ -19,7 +19,7 @@ MapView = React.createClass
 		addressesObj = JSON.parse(r.responseText)
 		{
 		addressesArr: Object.keys(addressesObj).map((key) -> addressesObj[key] )
-		circleCenter: new GoogleMapsAPI.LatLng(59.95000,30.31667)
+		circleCenter: new GoogleMapsAPI.LatLng(55.75167,37.61778)
 		}
 
 	handleClick: (e) ->
@@ -41,7 +41,7 @@ MapView = React.createClass
 				className="map"
 				onClick={@handleClick}
 				initialZoom={11}
-				initialCenter={new GoogleMapsAPI.LatLng(59.95000,30.31667)}>
+				initialCenter={new GoogleMapsAPI.LatLng(55.75167,37.61778)}>
 
 				<Marker
 					position={@state.circleCenter} />

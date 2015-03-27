@@ -109,7 +109,7 @@ MapView = React.createClass({
       addressesArr: Object.keys(addressesObj).map(function(key) {
         return addressesObj[key];
       }),
-      circleCenter: new GoogleMapsAPI.LatLng(59.95000, 30.31667)
+      circleCenter: new GoogleMapsAPI.LatLng(55.75167, 37.61778)
     };
   },
   handleClick: function(e) {
@@ -126,7 +126,7 @@ MapView = React.createClass({
       "className": "map",
       "onClick": this.handleClick,
       "initialZoom": 11.,
-      "initialCenter": new GoogleMapsAPI.LatLng(59.95000, 30.31667)
+      "initialCenter": new GoogleMapsAPI.LatLng(55.75167, 37.61778)
     }, React.createElement(Marker, {
       "position": this.state.circleCenter
     }), React.createElement(Circle, {

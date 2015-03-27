@@ -89,6 +89,10 @@ ReactGoogleMaps = require('react-googlemaps');
 
 GoogleMapsAPI = window.google.maps;
 
+google.maps.Circle.prototype.contains = function(latLng) {
+  return this.getBounds().contains(latLng) && google.maps.geometry.spherical.computeDistanceBetween(this.getCenter(), latLng) <= this.getRadius();
+};
+
 Map = ReactGoogleMaps.Map;
 
 Marker = ReactGoogleMaps.Marker;
@@ -100,15 +104,19 @@ Circle = ReactGoogleMaps.Circle;
 MapView = React.createClass({
   displayName: 'MapView',
   getInitialState: function() {
-    var addressesObj, r;
+    var addressesArr, addressesObj, r;
     r = new XMLHttpRequest();
     r.open("GET", "scripts/postorgs.json", false);
     r.send(null);
     addressesObj = JSON.parse(r.responseText);
+    addressesArr = Object.keys(addressesObj).map(function(key) {
+      return addressesObj[key];
+    });
+    addressesArr.map(function(el) {
+      return el.LatLng = new GoogleMapsAPI.LatLng(el.lat, el.lon);
+    });
     return {
-      addressesArr: Object.keys(addressesObj).map(function(key) {
-        return addressesObj[key];
-      }),
+      addressesArr: addressesArr,
       circleCenter: new GoogleMapsAPI.LatLng(55.75167, 37.61778)
     };
   },
@@ -118,9 +126,14 @@ MapView = React.createClass({
     });
   },
   render: function() {
-    var addresses;
+    var addresses, markers;
     addresses = this.state.addressesArr.map(function(addr) {
-      return React.createElement("p", null, React.createElement("span", null, " ", addr.address, " "), React.createElement("br", null), React.createElement("span", null, " ", addr.lon, " "), React.createElement("br", null), React.createElement("span", null, " ", addr.lat, " "));
+      return React.createElement("p", null, React.createElement("span", null, " ", addr.address, " "), React.createElement("br", null), React.createElement("span", null, " ", addr.LatLng, " "));
+    });
+    markers = this.state.addressesArr.map(function(addr) {
+      return React.createElement(Marker, {
+        "position": addr.LatLng
+      });
     });
     return React.createElement("div", null, React.createElement(Map, {
       "className": "map",
@@ -129,7 +142,7 @@ MapView = React.createClass({
       "initialCenter": new GoogleMapsAPI.LatLng(55.75167, 37.61778)
     }, React.createElement(Marker, {
       "position": this.state.circleCenter
-    }), React.createElement(Circle, {
+    }), markers, React.createElement(Circle, {
       "strokeColor": "#2980b9",
       "fillColor": "#2980b9",
       "fillOpacity": .35,

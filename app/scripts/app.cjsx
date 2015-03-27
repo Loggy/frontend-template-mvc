@@ -1,7 +1,6 @@
 React = require 'react'
 Tip = require './tip'
 MapView = require './map'
-Address = require './address'
 
 App = React.createClass
 	displayName: 'App'

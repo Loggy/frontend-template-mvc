@@ -25,11 +25,16 @@ MapView = React.createClass
 		{
 			addressesArr: addressesArr
 			circleCenter: new GoogleMapsAPI.LatLng(55.75167,37.61778)
+			currentAddress: ''
 		}
 
 	handleClick: (e) ->
 		@setState(circleCenter: new GoogleMapsAPI.LatLng(e.latLng.k,e.latLng.D))
 
+	setAddress: (e, c)->
+		console.log c.title
+		window.currentAddress = c.titel
+		@setState(currentAddress: c.title)
 
 	render: ()->
 		addresses = @state.addressesArr.map (addr)->
@@ -39,11 +44,15 @@ MapView = React.createClass
 				<span> {addr.LatLng} </span>
 			</p>
 
-		markers = @state.addressesArr.map (addr)->
+		markers = @state.addressesArr.map (addr) =>
 			<Marker
+				title = {addr.address}
+				onClick = {@setAddress}
 				position = {addr.LatLng} />
 
-		<div>
+
+		<div
+			refs="map" >
 			<Map
 				className="map"
 				onClick={@handleClick}
@@ -60,7 +69,9 @@ MapView = React.createClass
 					center={@state.circleCenter}
 					radius={5000} />
 			</Map>
-			{addresses}
+			<div>
+				{@state.currentAddress}
+			</div>
 		</div>
 
 module.exports = MapView

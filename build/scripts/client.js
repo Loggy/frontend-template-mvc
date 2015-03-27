@@ -20,14 +20,6 @@ MapView = require('./map');
 
 App = React.createClass({
   displayName: 'App',
-  propTypes: {
-    text: React.PropTypes.string.isRequired
-  },
-  getDefaultProps: function() {
-    return {
-      text: 'Hello, world'
-    };
-  },
   getInitialState: function() {
     return {
       value: 'Привет!'
@@ -36,17 +28,7 @@ App = React.createClass({
   render: function() {
     return React.createElement("div", {
       "className": "app"
-    }, React.createElement(Tip, null), React.createElement(MapView, null), React.createElement("p", null, this.state.value), React.createElement("input", {
-      "type": "text",
-      "onChange": this.handleChange
-    }));
-  },
-  handleChange: function(e) {
-    var value;
-    value = e.target.value;
-    return this.setState({
-      value: value
-    });
+    }, React.createElement(Tip, null), React.createElement(MapView, null));
   }
 });
 
@@ -92,27 +74,56 @@ MapView = React.createClass({
     return {
       addressesArr: addressesArr,
       circleCenter: new GoogleMapsAPI.LatLng(55.75167, 37.61778),
-      currentAddress: ''
+      currentAddress: 'Центр Москвы',
+      currentLatLng: new GoogleMapsAPI.LatLng(55.75167, 37.61778),
+      markersToShow: []
+    };
+  },
+  getDefaultProps: function() {
+    return {
+      radius: 5000
     };
   },
   handleClick: function(e) {
-    return this.setState({
+    this.setState({
       circleCenter: new GoogleMapsAPI.LatLng(e.latLng.k, e.latLng.D)
+    });
+    this.setState({
+      currentLatLng: null
+    });
+    return this.showMarkers(this.state.circleCenter, this.props.radius);
+  },
+  showMarkers: function(center, radius) {
+    var tempArray;
+    this.setState({
+      markersToShow: []
+    });
+    tempArray = [];
+    this.state.addressesArr.map((function(_this) {
+      return function(el) {
+        var distance;
+        distance = google.maps.geometry.spherical.computeDistanceBetween(center, el.LatLng);
+        if (distance <= radius) {
+          el.distance = distance;
+          return tempArray.push(el);
+        }
+      };
+    })(this));
+    return this.setState({
+      markersToShow: tempArray
     });
   },
   setAddress: function(e, c) {
-    console.log(c.title);
-    window.currentAddress = c.titel;
-    return this.setState({
+    this.setState({
       currentAddress: c.title
+    });
+    return this.setState({
+      currentLatLng: e.latLng
     });
   },
   render: function() {
-    var addresses, markers;
-    addresses = this.state.addressesArr.map(function(addr) {
-      return React.createElement("p", null, React.createElement("span", null, " ", addr.address, " "), React.createElement("br", null), React.createElement("span", null, " ", addr.LatLng, " "));
-    });
-    markers = this.state.addressesArr.map((function(_this) {
+    var markers, table;
+    markers = this.state.markersToShow.map((function(_this) {
       return function(addr) {
         return React.createElement(Marker, {
           "title": addr.address,
@@ -121,9 +132,15 @@ MapView = React.createClass({
         });
       };
     })(this));
-    return React.createElement("div", {
-      "refs": "map"
-    }, React.createElement(Map, {
+    table = this.state.markersToShow.map((function(_this) {
+      return function(addr) {
+        return React.createElement("div", {
+          "className": "address__cell"
+        }, React.createElement("span", null, "\u0410\u0434\u0440\u0435\u0441: ", addr.address), React.createElement("br", null), React.createElement("span", null, Math.ceil(addr.distance), " \u043c\u0435\u0442\u0440\u043e\u0432"));
+      };
+    })(this));
+    return React.createElement("div", null, React.createElement(Map, {
+      "ref": "map",
       "className": "map",
       "onClick": this.handleClick,
       "initialZoom": 11.,
@@ -131,12 +148,21 @@ MapView = React.createClass({
     }, React.createElement(Marker, {
       "position": this.state.circleCenter
     }), markers, React.createElement(Circle, {
+      "ref": "circle",
       "strokeColor": "#2980b9",
       "fillColor": "#2980b9",
       "fillOpacity": .35,
       "center": this.state.circleCenter,
-      "radius": 5000.
-    })), React.createElement("div", null, this.state.currentAddress));
+      "radius": this.props.radius
+    }), React.createElement(OverlayView, {
+      "style": {
+        backgroundColor: '#fff',
+        zIndex: 10001
+      },
+      "position": this.state.currentLatLng
+    }, React.createElement("p", null, this.state.currentAddress))), React.createElement("div", {
+      "className": 'address'
+    }, table));
   }
 });
 

@@ -3,7 +3,7 @@ ReactGoogleMaps = require 'react-googlemaps'
 GoogleMapsAPI = window.google.maps
 
 google.maps.Circle.prototype.contains = (latLng) ->
-  this.getBounds().contains(latLng) && google.maps.geometry.spherical.computeDistanceBetween(this.getCenter(), latLng) <= this.getRadius()
+  @getBounds().contains(latLng) && google.maps.geometry.spherical.computeDistanceBetween(this.getCenter(), latLng) <= @getRadius()
 
 Map = ReactGoogleMaps.Map
 Marker = ReactGoogleMaps.Marker
@@ -25,53 +25,76 @@ MapView = React.createClass
 		{
 			addressesArr: addressesArr
 			circleCenter: new GoogleMapsAPI.LatLng(55.75167,37.61778)
-			currentAddress: ''
+			currentAddress: 'Центр Москвы'
+			currentLatLng: new GoogleMapsAPI.LatLng(55.75167,37.61778)
+			markersToShow: []
 		}
+
+	getDefaultProps: ->
+			radius: 5000
 
 	handleClick: (e) ->
 		@setState(circleCenter: new GoogleMapsAPI.LatLng(e.latLng.k,e.latLng.D))
+		@setState(currentLatLng: null)
+		@showMarkers(@state.circleCenter, @props.radius)
 
+	showMarkers: (center,radius) ->
+		@setState(markersToShow: [])
+		tempArray = []
+		@state.addressesArr.map((el) =>
+			distance = google.maps.geometry.spherical.computeDistanceBetween(center, el.LatLng)
+			if distance <= radius
+				el.distance = distance
+				tempArray.push(el)
+		)
+		@setState(markersToShow: tempArray)
 	setAddress: (e, c)->
-		console.log c.title
-		window.currentAddress = c.titel
 		@setState(currentAddress: c.title)
+		@setState(currentLatLng: e.latLng)
 
 	render: ()->
-		addresses = @state.addressesArr.map (addr)->
-			<p>
-				<span> {addr.address} </span>
-				<br />
-				<span> {addr.LatLng} </span>
-			</p>
-
-		markers = @state.addressesArr.map (addr) =>
+		markers = @state.markersToShow.map (addr) =>
 			<Marker
 				title = {addr.address}
 				onClick = {@setAddress}
 				position = {addr.LatLng} />
 
-
-		<div
-			refs="map" >
+		table = @state.markersToShow.map (addr) =>
+			<div
+			className="address__cell">
+				<span>Адрес: {addr.address}</span>
+				<br />
+				<span>{Math.ceil(addr.distance)} метров</span>
+			</div>
+		<div>
 			<Map
-				className="map"
-				onClick={@handleClick}
-				initialZoom={11}
-				initialCenter={new GoogleMapsAPI.LatLng(55.75167,37.61778)}>
+			ref="map"
+			className="map"
+			onClick={@handleClick}
+			initialZoom={11}
+			initialCenter={new GoogleMapsAPI.LatLng(55.75167,37.61778)}>
 
 				<Marker
-					position={@state.circleCenter} />
+				position={@state.circleCenter} />
 				{markers}
 				<Circle
-					strokeColor="#2980b9"
-					fillColor="#2980b9"
-					fillOpacity=.35
-					center={@state.circleCenter}
-					radius={5000} />
+				ref="circle"
+				strokeColor="#2980b9"
+				fillColor="#2980b9"
+				fillOpacity=.35
+				center={@state.circleCenter}
+				radius={@props.radius} />
+				<OverlayView
+				style={{backgroundColor: '#fff', zIndex: 10001}}
+				position={@state.currentLatLng}>
+					<p>{@state.currentAddress}</p>
+				</OverlayView>
 			</Map>
-			<div>
-				{@state.currentAddress}
+			<div
+				className='address'>
+				{table}
 			</div>
 		</div>
 
 module.exports = MapView
+

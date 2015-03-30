@@ -36,6 +36,7 @@ MapView = React.createClass
 	handleClick: (e) ->
 		@setState(circleCenter: new GoogleMapsAPI.LatLng(e.latLng.k,e.latLng.D))
 		@setState(currentLatLng: null)
+		@setState(currentAddress: '')
 		@showMarkers(@state.circleCenter, @props.radius)
 
 	showMarkers: (center,radius) ->
@@ -44,7 +45,7 @@ MapView = React.createClass
 		@state.addressesArr.map((el) =>
 			distance = google.maps.geometry.spherical.computeDistanceBetween(center, el.LatLng)
 			if distance <= radius
-				el.distance = distance
+				el.distance = Math.ceil(distance)
 				tempArray.push(el)
 		)
 		@setState(markersToShow: tempArray)
@@ -57,14 +58,16 @@ MapView = React.createClass
 			<Marker
 				title = {addr.address}
 				onClick = {@setAddress}
+				icon="images/marker.svg"
 				position = {addr.LatLng} />
 
 		table = @state.markersToShow.map (addr) =>
 			<div
 			className="address__cell">
+				<span className="icon-house"></span>
 				<span>Адрес: {addr.address}</span>
 				<br />
-				<span>{Math.ceil(addr.distance)} метров</span>
+				<span>{addr.distance} метров</span>
 			</div>
 		<div>
 			<Map

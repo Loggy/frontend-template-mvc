@@ -5,9 +5,6 @@ MapView = require './map'
 App = React.createClass
 	displayName: 'App'
 
-	getInitialState: ->
-		value: 'Привет!'
-
 	render: ->
 		<div className="app">
 			<Tip />

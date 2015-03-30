@@ -20,11 +20,6 @@ MapView = require('./map');
 
 App = React.createClass({
   displayName: 'App',
-  getInitialState: function() {
-    return {
-      value: 'Привет!'
-    };
-  },
   render: function() {
     return React.createElement("div", {
       "className": "app"
@@ -91,6 +86,9 @@ MapView = React.createClass({
     this.setState({
       currentLatLng: null
     });
+    this.setState({
+      currentAddress: ''
+    });
     return this.showMarkers(this.state.circleCenter, this.props.radius);
   },
   showMarkers: function(center, radius) {
@@ -104,7 +102,7 @@ MapView = React.createClass({
         var distance;
         distance = google.maps.geometry.spherical.computeDistanceBetween(center, el.LatLng);
         if (distance <= radius) {
-          el.distance = distance;
+          el.distance = Math.ceil(distance);
           return tempArray.push(el);
         }
       };
@@ -128,6 +126,7 @@ MapView = React.createClass({
         return React.createElement(Marker, {
           "title": addr.address,
           "onClick": _this.setAddress,
+          "icon": "images/marker.svg",
           "position": addr.LatLng
         });
       };
@@ -136,7 +135,9 @@ MapView = React.createClass({
       return function(addr) {
         return React.createElement("div", {
           "className": "address__cell"
-        }, React.createElement("span", null, "\u0410\u0434\u0440\u0435\u0441: ", addr.address), React.createElement("br", null), React.createElement("span", null, Math.ceil(addr.distance), " \u043c\u0435\u0442\u0440\u043e\u0432"));
+        }, React.createElement("span", {
+          "className": "icon-house"
+        }), React.createElement("span", null, "\u0410\u0434\u0440\u0435\u0441: ", addr.address), React.createElement("br", null), React.createElement("span", null, addr.distance, " \u043c\u0435\u0442\u0440\u043e\u0432"));
       };
     })(this));
     return React.createElement("div", null, React.createElement(Map, {

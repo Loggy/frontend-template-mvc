@@ -135,9 +135,11 @@ MapView = React.createClass({
       return function(addr) {
         return React.createElement("div", {
           "className": "address__cell"
-        }, React.createElement("span", {
-          "className": "icon-house"
-        }), React.createElement("span", null, "\u0410\u0434\u0440\u0435\u0441: ", addr.address), React.createElement("br", null), React.createElement("span", null, addr.distance, " \u043c\u0435\u0442\u0440\u043e\u0432"));
+        }, React.createElement("div", {
+          "className": "icon-house address__cell__icon"
+        }), React.createElement("div", {
+          "className": "address__cell__data"
+        }, React.createElement("span", null, "\u0410\u0434\u0440\u0435\u0441: ", addr.address), React.createElement("br", null), React.createElement("span", null, addr.distance, " \u043c\u0435\u0442\u0440\u043e\u0432")));
       };
     })(this));
     return React.createElement("div", null, React.createElement(Map, {

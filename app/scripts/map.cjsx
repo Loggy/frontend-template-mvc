@@ -64,10 +64,12 @@ MapView = React.createClass
 		table = @state.markersToShow.map (addr) =>
 			<div
 			className="address__cell">
-				<span className="icon-house"></span>
-				<span>Адрес: {addr.address}</span>
-				<br />
-				<span>{addr.distance} метров</span>
+				<div className="icon-house address__cell__icon"></div>
+				<div className="address__cell__data">
+					<span>Адрес: {addr.address}</span>
+					<br />
+					<span>{addr.distance} метров</span>
+				</div>
 			</div>
 		<div>
 			<Map

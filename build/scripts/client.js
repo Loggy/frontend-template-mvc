@@ -9,7 +9,29 @@ React.render(React.createElement(App, null), document.getElementById('app'));
 
 
 
-},{"./app":2,"react":"react"}],2:[function(require,module,exports){
+},{"./app":3,"react":"react"}],2:[function(require,module,exports){
+var Address, React;
+
+React = require('react');
+
+Address = React.createClass({
+  displayName: 'Address',
+  render: function() {
+    return React.createElement("div", {
+      "className": "address__cell"
+    }, React.createElement("div", {
+      "className": "icon-house address__cell__icon"
+    }), React.createElement("div", {
+      "className": "address__cell__data"
+    }, React.createElement("span", null, "\u0410\u0434\u0440\u0435\u0441: ", this.props.address), React.createElement("br", null), React.createElement("span", null, this.props.distance, " \u043c\u0435\u0442\u0440\u043e\u0432")));
+  }
+});
+
+module.exports = Address;
+
+
+
+},{"react":"react"}],3:[function(require,module,exports){
 var App, MapView, React, Tip;
 
 React = require('react');
@@ -31,14 +53,16 @@ module.exports = App;
 
 
 
-},{"./map":3,"./tip":4,"react":"react"}],3:[function(require,module,exports){
-var Circle, GoogleMapsAPI, Map, MapView, Marker, OverlayView, React, ReactGoogleMaps;
+},{"./map":4,"./tip":5,"react":"react"}],4:[function(require,module,exports){
+var Address, Circle, GoogleMapsAPI, Map, MapView, Marker, OverlayView, React, ReactGoogleMaps;
 
 React = require('react');
 
 ReactGoogleMaps = require('react-googlemaps');
 
 GoogleMapsAPI = window.google.maps;
+
+Address = require('./address');
 
 google.maps.Circle.prototype.contains = function(latLng) {
   return this.getBounds().contains(latLng) && google.maps.geometry.spherical.computeDistanceBetween(this.getCenter(), latLng) <= this.getRadius();
@@ -133,13 +157,10 @@ MapView = React.createClass({
     })(this));
     table = this.state.markersToShow.map((function(_this) {
       return function(addr) {
-        return React.createElement("div", {
-          "className": "address__cell"
-        }, React.createElement("div", {
-          "className": "icon-house address__cell__icon"
-        }), React.createElement("div", {
-          "className": "address__cell__data"
-        }, React.createElement("span", null, "\u0410\u0434\u0440\u0435\u0441: ", addr.address), React.createElement("br", null), React.createElement("span", null, addr.distance, " \u043c\u0435\u0442\u0440\u043e\u0432")));
+        return React.createElement(Address, {
+          "address": addr.address,
+          "distance": addr.distance
+        });
       };
     })(this));
     return React.createElement("div", null, React.createElement(Map, {
@@ -173,7 +194,7 @@ module.exports = MapView;
 
 
 
-},{"react":"react","react-googlemaps":6}],4:[function(require,module,exports){
+},{"./address":2,"react":"react","react-googlemaps":7}],5:[function(require,module,exports){
 var React, Tip;
 
 React = require('react');
@@ -193,7 +214,7 @@ module.exports = Tip;
 
 
 
-},{"react":"react"}],5:[function(require,module,exports){
+},{"react":"react"}],6:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -281,7 +302,7 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 "use strict";
 
 var assign = require('react/lib/Object.assign');
@@ -300,7 +321,7 @@ module.exports = assign(
 );
 
 
-},{"./src/ReactMapComponents":8,"./src/ui/MapPropTypes":15,"./src/ui/ReactDefaultInjection":16,"react/lib/Object.assign":23}],7:[function(require,module,exports){
+},{"./src/ReactMapComponents":9,"./src/ui/MapPropTypes":16,"./src/ui/ReactDefaultInjection":17,"react/lib/Object.assign":24}],8:[function(require,module,exports){
 "use strict";
 
 var invariant = require('react/lib/invariant');
@@ -313,7 +334,7 @@ invariant(
 
 module.exports = window.google.maps;
 
-},{"react/lib/invariant":30}],8:[function(require,module,exports){
+},{"react/lib/invariant":31}],9:[function(require,module,exports){
 "use strict";
 
 var assign = require('react/lib/Object.assign');
@@ -356,7 +377,7 @@ ReactMapComponents.injection = injection;
 module.exports = ReactMapComponents;
 
 
-},{"./GoogleMapsAPI":7,"./ui/ReactMapComponent":17,"react/lib/Object.assign":23,"react/lib/mapObject":34}],9:[function(require,module,exports){
+},{"./GoogleMapsAPI":8,"./ui/ReactMapComponent":18,"react/lib/Object.assign":24,"react/lib/mapObject":35}],10:[function(require,module,exports){
 "use strict";
 
 var eventTypes = {
@@ -409,7 +430,7 @@ var MouseEventPlugin = {
 module.exports = MouseEventPlugin;
 
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 "use strict";
 
 var SimpleEventPlugin = require('./SimpleEventPlugin');
@@ -513,7 +534,7 @@ var SideEffectEventPlugin = {
 module.exports = SideEffectEventPlugin;
 
 
-},{"./SimpleEventPlugin":11}],11:[function(require,module,exports){
+},{"./SimpleEventPlugin":12}],12:[function(require,module,exports){
 "use strict";
 
 var eventTypes = {
@@ -548,7 +569,7 @@ var SimpleEventPlugin = {
 module.exports = SimpleEventPlugin;
 
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 "use strict";
 
 var invariant = require('react/lib/invariant');
@@ -660,7 +681,7 @@ var MapEvent = {
 module.exports = MapEvent;
 
 
-},{"react/lib/invariant":30}],13:[function(require,module,exports){
+},{"react/lib/invariant":31}],14:[function(require,module,exports){
 "use strict";
 
 var invariant = require('react/lib/invariant');
@@ -749,7 +770,7 @@ var MapOption = {
 module.exports = MapOption;
 
 
-},{"react/lib/invariant":30}],14:[function(require,module,exports){
+},{"react/lib/invariant":31}],15:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -832,7 +853,7 @@ var MapOptionConfig = {
 module.exports = MapOptionConfig;
 
 
-},{"./MapPropTypes":15,"react":"react"}],15:[function(require,module,exports){
+},{"./MapPropTypes":16,"react":"react"}],16:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -886,7 +907,7 @@ exports.MarkerShape = React.PropTypes.object;
  */
 exports.MapPanes = React.PropTypes.oneOf(['floatPane', 'mapPane', 'markerLayer', 'overlayLayer', 'overlayMouseTarget']);
 
-},{"../GoogleMapsAPI":7,"react":"react"}],16:[function(require,module,exports){
+},{"../GoogleMapsAPI":8,"react":"react"}],17:[function(require,module,exports){
 "use strict";
 
 var ReactMapComponents = require('../ReactMapComponents');
@@ -928,7 +949,7 @@ module.exports = {
 };
 
 
-},{"../ReactMapComponents":8,"../eventPlugins/MouseEventPlugin":9,"../eventPlugins/SideEffectEventPlugin":10,"../eventPlugins/SimpleEventPlugin":11,"./MapEvent":12,"./MapOption":13,"./MapOptionConfig":14,"./components/ReactFrag":19,"./components/ReactMap":20,"./components/ReactOverlayView":21}],17:[function(require,module,exports){
+},{"../ReactMapComponents":9,"../eventPlugins/MouseEventPlugin":10,"../eventPlugins/SideEffectEventPlugin":11,"../eventPlugins/SimpleEventPlugin":12,"./MapEvent":13,"./MapOption":14,"./MapOptionConfig":15,"./components/ReactFrag":20,"./components/ReactMap":21,"./components/ReactOverlayView":22}],18:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -987,7 +1008,7 @@ var ReactMapComponent = {
 module.exports = ReactMapComponent;
 
 
-},{"../GoogleMapsAPI":7,"./ReactMapComponentMixin":18,"react":"react","react/lib/invariant":30}],18:[function(require,module,exports){
+},{"../GoogleMapsAPI":8,"./ReactMapComponentMixin":19,"react":"react","react/lib/invariant":31}],19:[function(require,module,exports){
 "use strict";
 
 var assign = require('react/lib/Object.assign');
@@ -1184,7 +1205,7 @@ var ReactMapComponentMixin = {
 module.exports = ReactMapComponentMixin;
 
 
-},{"../GoogleMapsAPI":7,"./MapEvent":12,"./MapOption":13,"./MapOptionConfig":14,"react/lib/Object.assign":23,"react/lib/invariant":30}],19:[function(require,module,exports){
+},{"../GoogleMapsAPI":8,"./MapEvent":13,"./MapOption":14,"./MapOptionConfig":15,"react/lib/Object.assign":24,"react/lib/invariant":31}],20:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -1216,7 +1237,7 @@ var ReactFrag = React.createClass({displayName: "ReactFrag",
 module.exports = ReactFrag;
 
 
-},{"../MapPropTypes":15,"react":"react","react/lib/cloneWithProps":28}],20:[function(require,module,exports){
+},{"../MapPropTypes":16,"react":"react","react/lib/cloneWithProps":29}],21:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -1306,7 +1327,7 @@ var ReactMap = React.createClass({displayName: "ReactMap",
 module.exports = ReactMap;
 
 
-},{"../../ReactMapComponents":8,"../../utils/PropTypeUtils":22,"../MapPropTypes":15,"./ReactFrag":19,"react":"react","react/lib/cloneWithProps":28,"react/lib/keyMirror":32}],21:[function(require,module,exports){
+},{"../../ReactMapComponents":9,"../../utils/PropTypeUtils":23,"../MapPropTypes":16,"./ReactFrag":20,"react":"react","react/lib/cloneWithProps":29,"react/lib/keyMirror":33}],22:[function(require,module,exports){
 "use strict";
 
 var React = require('react');
@@ -1396,7 +1417,7 @@ var ReactOverlayView = React.createClass({
 module.exports = ReactOverlayView;
 
 
-},{"../../GoogleMapsAPI":7,"../MapPropTypes":15,"react":"react","react/lib/Object.assign":23,"react/lib/cloneWithProps":28}],22:[function(require,module,exports){
+},{"../../GoogleMapsAPI":8,"../MapPropTypes":16,"react":"react","react/lib/Object.assign":24,"react/lib/cloneWithProps":29}],23:[function(require,module,exports){
 "use strict";
 
 /**
@@ -1427,7 +1448,7 @@ function createChainableOrTypeChecker(orPropName, validate) {
   return chainedCheckType;
 }
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 /**
  * Copyright 2014, Facebook, Inc.
  * All rights reserved.
@@ -1474,7 +1495,7 @@ function assign(target, sources) {
 
 module.exports = assign;
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -1536,7 +1557,7 @@ var ReactContext = {
 
 module.exports = ReactContext;
 
-},{"./Object.assign":23}],25:[function(require,module,exports){
+},{"./Object.assign":24}],26:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -1570,7 +1591,7 @@ var ReactCurrentOwner = {
 
 module.exports = ReactCurrentOwner;
 
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014, Facebook, Inc.
@@ -1816,7 +1837,7 @@ ReactElement.isValidElement = function(object) {
 module.exports = ReactElement;
 
 }).call(this,require('_process'))
-},{"./ReactContext":24,"./ReactCurrentOwner":25,"./warning":35,"_process":5}],27:[function(require,module,exports){
+},{"./ReactContext":25,"./ReactCurrentOwner":26,"./warning":36,"_process":6}],28:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -1983,7 +2004,7 @@ var ReactPropTransferer = {
 module.exports = ReactPropTransferer;
 
 }).call(this,require('_process'))
-},{"./Object.assign":23,"./emptyFunction":29,"./invariant":30,"./joinClasses":31,"./warning":35,"_process":5}],28:[function(require,module,exports){
+},{"./Object.assign":24,"./emptyFunction":30,"./invariant":31,"./joinClasses":32,"./warning":36,"_process":6}],29:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -2042,7 +2063,7 @@ function cloneWithProps(child, props) {
 module.exports = cloneWithProps;
 
 }).call(this,require('_process'))
-},{"./ReactElement":26,"./ReactPropTransferer":27,"./keyOf":33,"./warning":35,"_process":5}],29:[function(require,module,exports){
+},{"./ReactElement":27,"./ReactPropTransferer":28,"./keyOf":34,"./warning":36,"_process":6}],30:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -2076,7 +2097,7 @@ emptyFunction.thatReturnsArgument = function(arg) { return arg; };
 
 module.exports = emptyFunction;
 
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -2133,7 +2154,7 @@ var invariant = function(condition, format, a, b, c, d, e, f) {
 module.exports = invariant;
 
 }).call(this,require('_process'))
-},{"_process":5}],31:[function(require,module,exports){
+},{"_process":6}],32:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -2174,7 +2195,7 @@ function joinClasses(className/*, ... */) {
 
 module.exports = joinClasses;
 
-},{}],32:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2013-2014, Facebook, Inc.
@@ -2229,7 +2250,7 @@ var keyMirror = function(obj) {
 module.exports = keyMirror;
 
 }).call(this,require('_process'))
-},{"./invariant":30,"_process":5}],33:[function(require,module,exports){
+},{"./invariant":31,"_process":6}],34:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -2265,7 +2286,7 @@ var keyOf = function(oneKeyObj) {
 
 module.exports = keyOf;
 
-},{}],34:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 /**
  * Copyright 2013-2014, Facebook, Inc.
  * All rights reserved.
@@ -2318,7 +2339,7 @@ function mapObject(object, callback, context) {
 
 module.exports = mapObject;
 
-},{}],35:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 (function (process){
 /**
  * Copyright 2014, Facebook, Inc.
@@ -2363,4 +2384,4 @@ if ("production" !== process.env.NODE_ENV) {
 module.exports = warning;
 
 }).call(this,require('_process'))
-},{"./emptyFunction":29,"_process":5}]},{},[1]);
+},{"./emptyFunction":30,"_process":6}]},{},[1]);

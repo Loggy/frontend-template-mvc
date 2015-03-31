@@ -1,6 +1,7 @@
 React = require 'react'
 ReactGoogleMaps = require 'react-googlemaps'
 GoogleMapsAPI = window.google.maps
+Address = require './address'
 
 google.maps.Circle.prototype.contains = (latLng) ->
   @getBounds().contains(latLng) && google.maps.geometry.spherical.computeDistanceBetween(this.getCenter(), latLng) <= @getRadius()
@@ -62,15 +63,10 @@ MapView = React.createClass
 				position = {addr.LatLng} />
 
 		table = @state.markersToShow.map (addr) =>
-			<div
-			className="address__cell">
-				<div className="icon-house address__cell__icon"></div>
-				<div className="address__cell__data">
-					<span>Адрес: {addr.address}</span>
-					<br />
-					<span>{addr.distance} метров</span>
-				</div>
-			</div>
+			<Address
+			address={addr.address}
+			distance={addr.distance}
+			/>
 		<div>
 			<Map
 			ref="map"

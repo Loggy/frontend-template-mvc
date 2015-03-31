@@ -4,10 +4,14 @@ Address = React.createClass
 	displayName: 'Address'
 
 	render: ->
-		<div className="address">
-			<span className="address__icon"></span>
-			<span className="address__name"></span>
-			<span className="address__distance"></span>
+		<div
+		className="address__cell">
+			<div className="icon-house address__cell__icon"></div>
+			<div className="address__cell__data">
+				<span>Адрес: {@props.address}</span>
+				<br />
+				<span>{@props.distance} метров</span>
+			</div>
 		</div>
 
 

@@ -1,20 +1,15 @@
 {
-  "name": "ReactCourse",
+  "name": "FrontendTemplate",
   "version": "0.0.1",
-  "description": "React fundamentals by LoftBlog",
-  "author": "Sergey Laptev <iamsergeylaptev@gmail.com> (https://twitter.com/iamsergeylaptev)",
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:sergeylaptev/react-fundamentals.git"
-  },
   "browserify": {
     "transform": [
       "coffee-reactify"
     ]
   },
   "dependencies": {
+    "backbone": "^1.1.2",
+    "flux": "^2.0.3",
     "react": "^0.12.2",
-    "react-googlemaps": "^0.4.0",
     "reactify": "^1.1.0"
   },
   "devDependencies": {
@@ -29,6 +24,7 @@
     "gulp-ruby-sass": "^1.0.1",
     "gulp-slim": "^0.1.0",
     "gulp-util": "^3.0.1",
+    "gulp-imagemin": "*",
     "lodash": "^3.5.0",
     "pretty-hrtime": "^0.2.2",
     "require-dir": "^0.1.0",

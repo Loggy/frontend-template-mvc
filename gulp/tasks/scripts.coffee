@@ -8,6 +8,7 @@ handleErrors = require '../util/handleErrors'
 
 # External dependencies we do not want to rebundle while developing
 dependencies =
+  backbone: './node_modules/backbone'
   react: './node_modules/react'
   lodash: './node_modules/lodash'
 
